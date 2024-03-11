@@ -1,5 +1,6 @@
 const Usuario = require('../models/usuarios.model')
 const bcrypt = require("bcrypt")
+const { transporter } = require('../helpers/nodemailer.transporter') 
 
 const obtenerUsuarios = async (req,res) => {
   try {
@@ -98,6 +99,29 @@ const registrarUsuario = async (req,res) => {
       })
 
       await nuevoUsuario.save()
+
+      const idUsuario = nuevoUsuario._id.toString()
+      const emailUsuario = nuevoUsuario.email
+
+      await transporter.sendMail({
+        from: '"admim eComRC" <ecomrc.rolling@gmail.com>',
+        to: emailUsuario,
+        subject: "Registro en eComRC",
+        html: 
+        `
+          <span>¡Hola <strong>${nuevoUsuario.nombre}</strong>!</span>
+          <br>
+          <p>🫂Muchas gracias por registrarte a nuestra página web🫂</p>
+          <br>
+          <p>Para completar el proceso de registro, necesitamos que verifiques el email que proporcionaste: ${emailUsuario}. Para eso, haz click en el siguiente enlace: </p>
+          <a href="http://localhost:3000/verify/${idUsuario}">Verificar Cuenta</a>
+          <br>
+          <br>
+          <span>Saludos cordiales</span>
+          <br>
+          <span><strong><i>ADMIN eComRC</i></strong></span>
+        `,
+      });
       
       res.status(201).json({
         message: 'Usuario creado correctamente'
