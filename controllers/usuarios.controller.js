@@ -214,8 +214,9 @@ const inicioSesion = async (req, res) => {
     const usuario = await Usuario.findOne({ username }) 
 
     if(!usuario){
-      return res.status(400).json({
-        message: 'Uno de los datos es incorrecto'
+      return res.json({
+        message: 'Uno de los datos es incorrecto',
+        status: 400
       })
     }
     else
@@ -225,19 +226,21 @@ const inicioSesion = async (req, res) => {
       if(pwd){
         const token = jwt.sign({ usuario }, claveToken)
 
-        return res.status(200).json({
-          message: 'Usuario autenticado correctamente',
-          token
+        return res.json({
+          message: `¡Bienvenido ${usuario.username}!`,
+          token,
+          status: 200
         })
       }
       else{
-        return res.status(400).json({
-          message: 'Uno de los datos es incorrecto'
+        return res.json({
+          message: 'Uno de los datos es incorrecto',
+          status: 400
         })
       }
     }
   } catch (error) {
-    
+    console.error(error)
   }
 }
 
