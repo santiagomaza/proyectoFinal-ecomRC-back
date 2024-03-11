@@ -1,6 +1,8 @@
 const Usuario = require('../models/usuarios.model')
 const bcrypt = require("bcrypt")
-const { transporter } = require('../helpers/nodemailer.transporter') 
+const { transporter } = require('../helpers/nodemailer.transporter')
+const jwt = require("jsonwebtoken")
+const claveToken = process.env.claveTOKEN
 
 const obtenerUsuarios = async (req,res) => {
   try {
@@ -113,7 +115,7 @@ const registrarUsuario = async (req,res) => {
           <br>
           <p>🫂Muchas gracias por registrarte a nuestra página web🫂</p>
           <br>
-          <p>Para completar el proceso de registro, necesitamos que verifiques el email que proporcionaste: ${emailUsuario}. Para eso, haz click en el siguiente enlace: </p>
+          <p>Para completar el proceso de registro, necesitamos que verifiques el email que proporcionaste: <strong>${emailUsuario}</strong>. Para eso, haz click en el siguiente enlace: </p>
           <a href="http://localhost:3000/verify/${idUsuario}">Verificar Cuenta</a>
           <br>
           <br>
@@ -123,8 +125,9 @@ const registrarUsuario = async (req,res) => {
         `,
       });
       
-      res.status(201).json({
-        message: 'Usuario creado correctamente'
+      res.json({
+        message: 'Usuario creado correctamente',
+        status: 201
       })
 
     } catch (error) {
@@ -204,4 +207,38 @@ const recuperarContraseña = async (req, res) => {
   }
 }
 
-module.exports = { obtenerUsuarios, crearUsuario, registrarUsuario, borrarUsuario, modificarUsuario, cambiarEstado, recuperarContraseña }
+const inicioSesion = async (req, res) => {
+  const { username, contraseña } = req.body
+
+  try {
+    const usuario = await Usuario.findOne({ username }) 
+
+    if(!usuario){
+      return res.status(400).json({
+        message: 'Uno de los datos es incorrecto'
+      })
+    }
+    else
+    {
+      const pwd = bcrypt.compareSync(contraseña, usuario.contraseña)
+
+      if(pwd){
+        const token = jwt.sign({ usuario }, claveToken)
+
+        return res.status(200).json({
+          message: 'Usuario autenticado correctamente',
+          token
+        })
+      }
+      else{
+        return res.status(400).json({
+          message: 'Uno de los datos es incorrecto'
+        })
+      }
+    }
+  } catch (error) {
+    
+  }
+}
+
+module.exports = { obtenerUsuarios, crearUsuario, registrarUsuario, borrarUsuario, modificarUsuario, cambiarEstado, recuperarContraseña, inicioSesion }
