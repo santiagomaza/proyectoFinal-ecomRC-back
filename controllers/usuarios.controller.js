@@ -16,6 +16,20 @@ const obtenerUsuarios = async (req,res) => {
   }
 }
 
+const obtenerUnUsuario = async (req, res) => {
+  try {
+    const usuario = await Usuario.findById(req.params.id)
+
+    res.json({
+      message: `El usuario encontrado es ${usuario.username}`,
+      usuario,
+      status: 200
+    })
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 const crearUsuario = async (req,res) => {
   const { nombre, username, domicilio, email, pais, provincia, codigoPostal, telefono, contraseña, estado, rol} = req.body
   
@@ -142,8 +156,9 @@ const borrarUsuario = async (req, res) => {
   try {
     await Usuario.findByIdAndDelete(id)
 
-    res.status(200).json({
-      message: 'Usuario eliminado correctamente'
+    res.json({
+      message: 'Usuario eliminado correctamente',
+      status: 200
     })
   } catch (error) {
     console.error(error)
@@ -171,8 +186,9 @@ const modificarUsuario = async (req, res) => {
       rol
     })
 
-    res.status(200).json({
-      message: 'Usuario modificado correctamente'
+    res.json({
+      message: 'Usuario modificado correctamente',
+      status: 200
     })
   } catch (error) {
     console.log(error)
@@ -185,11 +201,53 @@ const cambiarEstado = async (req,res) => {
   try {
     await Usuario.findByIdAndUpdate(id, { estado: "Activo"})
 
-    res.status(200).json({
-      message: 'Usuario activado correctamente'
+    res.json({
+      message: 'Usuario activado correctamente',
+      status: 200
     }) 
   } catch (error) {
     console.log(error)
+  }
+}
+
+const buscarEmailRecContraseña = async (req, res) => {
+  const { email } = req.body
+  const usuario = await Usuario.findOne({ email })
+
+  if(usuario){
+    try {
+      await transporter.sendMail({
+        from: '"admim eComRC" <ecomrc.rolling@gmail.com>',
+        to: email,
+        subject: "Recuperación de Contraseña",
+        html:
+        `
+          <span>¡Hola <strong>${usuario.nombre}</strong>!</span>
+          <br>
+          <p>Solicitaste un cambio de contraseña para el email ${email}. Para poder hacer el cambio de contraseña, por favor, haz click en el siguiente enlace: </p>
+          <br>
+          <a href="http://localhost:5173/reestablecerContraseña">Reestablecer Contraseña</a>
+          <br>
+          <br>
+          <span>Saludos cordiales</span>
+          <br>
+          <span><strong><i>admin eComRC</i></strong></span>
+        `
+      })
+
+      res.json({
+        message: `Email enviado correctamente al usuario ${usuario.username}`,
+        status: 200
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }
+  else{
+    res.json({
+      message: 'El email no existe en la base de datos',
+      status: 400
+    })
   }
 }
 
@@ -202,8 +260,13 @@ const recuperarContraseña = async (req, res) => {
     await Usuario.findByIdAndUpdate(id, {
       contraseña: contraseñaEncriptada
     })
+
+    res.json({
+      message: 'Contraseña modificada correctamente',
+      status: 200
+    })
   } catch (error) {
-    console.error(error)
+    console.log(error)
   }
 }
 
@@ -228,6 +291,7 @@ const inicioSesion = async (req, res) => {
 
         return res.json({
           message: `¡Bienvenido ${usuario.username}!`,
+          usuario,
           token,
           status: 200
         })
@@ -244,4 +308,4 @@ const inicioSesion = async (req, res) => {
   }
 }
 
-module.exports = { obtenerUsuarios, crearUsuario, registrarUsuario, borrarUsuario, modificarUsuario, cambiarEstado, recuperarContraseña, inicioSesion }
+module.exports = { obtenerUsuarios, obtenerUnUsuario, crearUsuario, registrarUsuario, borrarUsuario, modificarUsuario, cambiarEstado, buscarEmailRecContraseña, recuperarContraseña, inicioSesion }
