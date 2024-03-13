@@ -31,26 +31,28 @@ const obtenerUnUsuario = async (req, res) => {
 }
 
 const crearUsuario = async (req,res) => {
-  const { nombre, username, domicilio, email, pais, provincia, codigoPostal, telefono, contraseña, estado, rol} = req.body
+  const { nombre, username, domicilio, email, pais, provincia, codigoPostal, telefono, contraseña, estado, rol } = req.body
   
   const usuarioBD = await Usuario.findOne({ username })
   const emailBD = await Usuario.findOne({ email })
   const saltRounds = 15
-  const contraseñaEncriptada = bcrypt.hashSync(contraseña, saltRounds)
-
+  
   if(usuarioBD){
-    return res.status(400).json({
-      message: 'El usuario ya existe en la base de datos'
+    return res.json({
+      message: 'El usuario ya existe en la base de datos',
+      status: 400
     })
   }
-
+  
   if(emailBD){
-    return res.status(400).json({
-      message: 'El email ya existe en la base de datos'
+    return res.json({
+      message: 'El email ya existe en la base de datos',
+      status: 400
     })
   }
-
+  
   if(!usuarioBD || !emailBD){
+    const contraseñaEncriptada = bcrypt.hashSync(contraseña, saltRounds)
     try {
       const nuevoUsuario = new Usuario({
         nombre,
@@ -68,8 +70,9 @@ const crearUsuario = async (req,res) => {
 
       await nuevoUsuario.save()
       
-      res.status(201).json({
-        message: 'Usuario creado correctamente'
+      res.json({
+        message: `Usuario ${nuevoUsuario.username} creado exitosamente`,
+        status: 201
       })
 
     } catch (error) {
@@ -166,10 +169,9 @@ const borrarUsuario = async (req, res) => {
 }
 
 const modificarUsuario = async (req, res) => {
-  const { id, nombre, username, domicilio, email, pais, provincia, codigoPostal, telefono, contraseña, estado, rol} = req.body
+  const { id, nombre, username, domicilio, email, pais, provincia, codigoPostal, telefono, estado, rol } = req.body
 
   const saltRounds = 15
-  const contraseñaEncriptada = bcrypt.hashSync(contraseña, saltRounds)
 
   try {
     await Usuario.findByIdAndUpdate(id, {
@@ -181,7 +183,6 @@ const modificarUsuario = async (req, res) => {
       provincia,
       codigoPostal,
       telefono,
-      contraseña: contraseñaEncriptada,
       estado,
       rol
     })
@@ -286,21 +287,29 @@ const inicioSesion = async (req, res) => {
     {
       const pwd = bcrypt.compareSync(contraseña, usuario.contraseña)
 
-      if(pwd){
-        const token = jwt.sign({ usuario }, claveToken)
-
+      if(usuario.estado === "Inactivo"){
         return res.json({
-          message: `¡Bienvenido ${usuario.username}!`,
-          usuario,
-          token,
-          status: 200
+          message: 'El usuario con el que estas intentando ingresar está inactivo',
+          status: 401
         })
       }
-      else{
-        return res.json({
-          message: 'Uno de los datos es incorrecto',
-          status: 400
-        })
+      else if(usuario.estado === "Activo" || usuario.estado === "Pendiente"){
+        if(pwd){
+          const token = jwt.sign({ usuario }, claveToken)
+  
+          return res.json({
+            message: `¡Bienvenido ${usuario.username}!`,
+            usuario,
+            token,
+            status: 200
+          })
+        }
+        else{
+          return res.json({
+            message: 'Uno de los datos es incorrecto',
+            status: 400
+          })
+        }
       }
     }
   } catch (error) {
