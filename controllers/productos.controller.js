@@ -24,8 +24,9 @@ const crearProducto = async (req, res) => {
   }
 
   if(productoBD){
-    return res.status(400).json({
-      message: `El producto ${nombre} ya existe en la base de datos`
+    return res.json({
+      message: `El producto ${nombre} ya existe en la base de datos`,
+      status: 400
     })
   }
   else{
@@ -44,7 +45,8 @@ const crearProducto = async (req, res) => {
       await nuevoProducto.save()
   
       res.json({
-        message: `Producto ${nuevoProducto.nombre} creado correctamente`
+        message: `Producto ${nuevoProducto.nombre} creado correctamente`,
+        status: 201
       })
     } catch (error) {
       console.error(error)
