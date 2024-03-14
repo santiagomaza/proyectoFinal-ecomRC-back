@@ -10,7 +10,7 @@ const obtenerCategorias = async (req, res) => {
 }
 
 const crearCategoria = async (req, res) => {
-  const { categoria, descripcion } = req.body
+  const { categoria, descripcion, publicada } = req.body
 
   const categoriaBD = await Categoria.findOne({ categoria })
 
@@ -25,7 +25,7 @@ const crearCategoria = async (req, res) => {
       const nuevaCategoria = new Categoria({
         categoria,
         descripcion,
-        publicada: true
+        publicada
       })
 
       await nuevaCategoria.save()
@@ -83,7 +83,7 @@ const publicarCategoria = async (req, res) => {
     await Categoria.findByIdAndUpdate(id, { publicada })
 
     res.json({
-      message: 'Categoria publicada correctamente',
+      message: 'Estado de categoria modificado correctamente',
       status: 200
     })
   } catch (error) {
