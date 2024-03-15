@@ -43,21 +43,16 @@ const crearCategoria = async (req, res) => {
 const modificarCategoria = async (req, res) => {
   const { id, categoria, descripcion } = req.body
 
-  const categoriaBD = await Categoria.findOne({ categoria })
+  try {
+    await Categoria.findByIdAndUpdate(id, { categoria, descripcion })
 
-  if(categoriaBD){
-    return res.json({
-      message: `La categoria ${categoria} ya existe en la base de datos`,
-      status: 400
+    res.json({
+      message: `La categoria ${categoria} se ha modificado con exito`,
+      status: 200
     })
   }
-  else{
-    try {
-      await Categoria.findByIdAndUpdate(id, { categoria, descripcion })
-    }
-    catch (error) {
-      console.error(error)
-    }
+  catch (error) {
+    console.error(error)
   }
 }
 

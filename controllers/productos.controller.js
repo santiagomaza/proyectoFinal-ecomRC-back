@@ -61,7 +61,8 @@ const eliminarProducto = async (req, res) => {
     const producto = await Producto.findByIdAndDelete(id)
 
     res.json({
-      message: `Producto ${producto.nombre} eliminado correctamente`
+      message: `Producto ${producto.nombre} eliminado correctamente`,
+      status: 200
     })
   } catch (error) {
     console.error(error)
