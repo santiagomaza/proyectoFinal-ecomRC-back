@@ -12,8 +12,6 @@ usuario.post("/registrar-usuario", registrarUsuario)
 
 usuario.post("/inicio-sesion", inicioSesion)
 
-usuario.post("/eliminar-usuario", borrarUsuario)
-
 usuario.post("/buscar-email", buscarEmailRecContraseña)
 
 usuario.patch("/modificar-usuario", modificarUsuario)
@@ -21,5 +19,7 @@ usuario.patch("/modificar-usuario", modificarUsuario)
 usuario.patch("/cambiar-estado", cambiarEstado)
 
 usuario.patch("/recuperar-contraseña", recuperarContraseña)
+
+usuario.delete("/eliminar-usuario", borrarUsuario)
 
 module.exports = usuario

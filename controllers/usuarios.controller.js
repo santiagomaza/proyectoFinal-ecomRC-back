@@ -157,10 +157,10 @@ const borrarUsuario = async (req, res) => {
   const { id } = req.body
 
   try {
-    await Usuario.findByIdAndDelete(id)
+    const usuario = await Usuario.findByIdAndDelete(id)
 
     res.json({
-      message: 'Usuario eliminado correctamente',
+      message: `Usuario ${usuario.nombre} eliminado exitosamente`,
       status: 200
     })
   } catch (error) {
