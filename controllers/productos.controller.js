@@ -79,27 +79,25 @@ const modificarProducto = async (req, res) => {
       status: 400
     })
   }
-
-  if(productoBD){
-    return res.status(400).json({
-      message: `El producto ${nombre} ya existe en la base de datos`
+  
+  try {
+    await Producto.findByIdAndUpdate(id, {
+      nombre,
+      precio,
+      stock,
+      categoria,
+      descripcion,
+      imagen1,
+      imagen2,
+      imagen3
     })
-  }
-  else{
-    try {
-      await Producto.findByIdAndUpdate(id, {
-        nombre,
-        precio,
-        stock,
-        categoria,
-        descripcion,
-        imagen1,
-        imagen2,
-        imagen3
-      })
-    } catch (error) {
-      console.error(error)
-    }
+
+    res.json({
+      message: `Producto modificado correctamente`,
+      status: 200
+    })
+  } catch (error) {
+    console.error(error)
   }
 }
 
@@ -110,7 +108,8 @@ const destacarProducto = async (req, res) => {
     await Producto.findByIdAndUpdate(id, { destacado })
 
     res.json({
-      message: `Producto modificado correctamente`
+      message: `Producto modificado correctamente`,
+      status: 200
     })
   } catch (error) {
     console.error(error)
