@@ -214,6 +214,7 @@ const cambiarEstado = async (req,res) => {
 const buscarEmailRecContraseña = async (req, res) => {
   const { email } = req.body
   const usuario = await Usuario.findOne({ email })
+  const token = jwt.sign({ usuario }, claveToken)
 
   if(usuario){
     try {
@@ -227,7 +228,7 @@ const buscarEmailRecContraseña = async (req, res) => {
           <br>
           <p>Solicitaste un cambio de contraseña para el email ${email}. Para poder hacer el cambio de contraseña, por favor, haz click en el siguiente enlace: </p>
           <br>
-          <a href="http://localhost:5173/reestablecerContraseña">Reestablecer Contraseña</a>
+          <a href="http://localhost:5173/restablecerContraseña/${token}">Reestablecer Contraseña</a>
           <br>
           <br>
           <span>Saludos cordiales</span>
