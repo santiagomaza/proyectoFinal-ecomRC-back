@@ -212,7 +212,7 @@ const cambiarEstado = async (req,res) => {
 }
 
 const buscarEmailRecContraseña = async (req, res) => {
-  const { email } = req.body
+  const { email, id } = req.body
   const usuario = await Usuario.findOne({ email })
   const token = jwt.sign({ usuario }, claveToken)
 
@@ -239,6 +239,8 @@ const buscarEmailRecContraseña = async (req, res) => {
 
       res.json({
         message: `Email enviado correctamente al usuario ${usuario.username}`,
+        token,
+        usuario,
         status: 200
       })
     } catch (error) {
@@ -253,7 +255,7 @@ const buscarEmailRecContraseña = async (req, res) => {
   }
 }
 
-const recuperarContraseña = async (req, res) => {
+const restablecerContraseña = async (req, res) => {
   const { id, contraseña } = req.body
   const saltRounds = 15
   const contraseñaEncriptada = bcrypt.hashSync(contraseña, saltRounds)
@@ -318,4 +320,4 @@ const inicioSesion = async (req, res) => {
   }
 }
 
-module.exports = { obtenerUsuarios, obtenerUnUsuario, crearUsuario, registrarUsuario, borrarUsuario, modificarUsuario, cambiarEstado, buscarEmailRecContraseña, recuperarContraseña, inicioSesion }
+module.exports = { obtenerUsuarios, obtenerUnUsuario, crearUsuario, registrarUsuario, borrarUsuario, modificarUsuario, cambiarEstado, buscarEmailRecContraseña, restablecerContraseña, inicioSesion }

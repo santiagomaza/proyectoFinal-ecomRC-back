@@ -1,6 +1,6 @@
 const express = require("express")
 const usuario = express.Router()
-const { obtenerUsuarios, obtenerUnUsuario, crearUsuario, registrarUsuario, borrarUsuario, modificarUsuario, cambiarEstado, buscarEmailRecContraseña, recuperarContraseña, inicioSesion } = require('../controllers/usuarios.controller')
+const { obtenerUsuarios, obtenerUnUsuario, crearUsuario, registrarUsuario, borrarUsuario, modificarUsuario, cambiarEstado, buscarEmailRecContraseña, restablecerContraseña, inicioSesion } = require('../controllers/usuarios.controller')
 
 usuario.get("/obtener-usuarios", obtenerUsuarios)
 
@@ -18,7 +18,7 @@ usuario.patch("/modificar-usuario", modificarUsuario)
 
 usuario.patch("/cambiar-estado", cambiarEstado)
 
-usuario.patch("/recuperar-contraseña", recuperarContraseña)
+usuario.patch("/restablecer-contrasenia", restablecerContraseña)
 
 usuario.delete("/eliminar-usuario", borrarUsuario)
 
