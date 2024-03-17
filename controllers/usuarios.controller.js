@@ -123,7 +123,7 @@ const registrarUsuario = async (req,res) => {
       const emailUsuario = nuevoUsuario.email
 
       await transporter.sendMail({
-        from: '"admim eComRC" <ecomrc.rolling@gmail.com>',
+        from: '"admim eComRC" <ecomrc.tuc@gmail.com>',
         to: emailUsuario,
         subject: "Registro en eComRC",
         html: 
@@ -219,7 +219,7 @@ const buscarEmailRecContraseña = async (req, res) => {
   if(usuario){
     try {
       await transporter.sendMail({
-        from: '"admim eComRC" <ecomrc.rolling@gmail.com>',
+        from: '"admim eComRC" <ecomrc.tuc@gmail.com>',
         to: email,
         subject: "Recuperación de Contraseña",
         html:
