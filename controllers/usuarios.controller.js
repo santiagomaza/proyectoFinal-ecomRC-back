@@ -133,7 +133,7 @@ const registrarUsuario = async (req,res) => {
           <p>🫂Muchas gracias por registrarte a nuestra página web🫂</p>
           <br>
           <p>Para completar el proceso de registro, necesitamos que verifiques el email que proporcionaste: <strong>${emailUsuario}</strong>. Para eso, haz click en el siguiente enlace: </p>
-          <a href="http://localhost:3000/verify/${idUsuario}">Verificar Cuenta</a>
+          <a href="http://localhost:5173/verificar-email/${idUsuario}">http://localhost:5173/verificar-email/${idUsuario}</a>
           <br>
           <br>
           <span>Saludos cordiales</span>
@@ -144,6 +144,7 @@ const registrarUsuario = async (req,res) => {
       
       res.json({
         message: 'Usuario creado correctamente',
+        idUsuario,
         status: 201
       })
 
@@ -170,8 +171,6 @@ const borrarUsuario = async (req, res) => {
 
 const modificarUsuario = async (req, res) => {
   const { id, nombre, username, domicilio, email, pais, provincia, codigoPostal, telefono, estado, rol } = req.body
-
-  const saltRounds = 15
 
   try {
     await Usuario.findByIdAndUpdate(id, {
@@ -212,7 +211,7 @@ const cambiarEstado = async (req,res) => {
 }
 
 const buscarEmailRecContraseña = async (req, res) => {
-  const { email, id } = req.body
+  const { email } = req.body
   const usuario = await Usuario.findOne({ email })
   const token = jwt.sign({ usuario }, claveToken)
 
@@ -228,7 +227,7 @@ const buscarEmailRecContraseña = async (req, res) => {
           <br>
           <p>Solicitaste un cambio de contraseña para el email ${email}. Para poder hacer el cambio de contraseña, por favor, haz click en el siguiente enlace: </p>
           <br>
-          <a href="http://localhost:5173/restablecerContraseña/${token}">Reestablecer Contraseña</a>
+          <a href="http://localhost:5173/restablecerContraseña/${token}">http://localhost:5173/restablecerContraseña/${token}</a>
           <br>
           <br>
           <span>Saludos cordiales</span>
