@@ -10,6 +10,20 @@ const obtenerProductos = async (req, res) => {
   }
 }
 
+const obtenerUnProducto = async (req, res) => {
+  const { id } = req.params
+
+  try {
+    const producto = await Producto.findById(id)
+
+    res.json({
+      producto
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const crearProducto = async (req, res) => {
   const { nombre, precio, stock, categoria, descripcion, imagen1, imagen2, imagen3 } = req.body
 
@@ -117,4 +131,4 @@ const destacarProducto = async (req, res) => {
   }
 }
 
-module.exports = { obtenerProductos, crearProducto, modificarProducto, destacarProducto,  eliminarProducto }
+module.exports = { obtenerProductos, obtenerUnProducto, crearProducto, modificarProducto, destacarProducto,  eliminarProducto }

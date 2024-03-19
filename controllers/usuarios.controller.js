@@ -17,8 +17,10 @@ const obtenerUsuarios = async (req,res) => {
 }
 
 const obtenerUnUsuario = async (req, res) => {
+  const { id } = req.params
+
   try {
-    const usuario = await Usuario.findById(req.params.id)
+    const usuario = await Usuario.findById(id)
 
     res.json({
       message: `El usuario encontrado es ${usuario.username}`,

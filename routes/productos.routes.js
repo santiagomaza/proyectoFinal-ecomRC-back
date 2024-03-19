@@ -1,8 +1,10 @@
 const express = require('express');
 const producto = express.Router()
-const { obtenerProductos, crearProducto, modificarProducto, destacarProducto, eliminarProducto } = require('../controllers/productos.controller')
+const { obtenerProductos, obtenerUnProducto, crearProducto, modificarProducto, destacarProducto, eliminarProducto } = require('../controllers/productos.controller')
 
 producto.get("/obtener-productos", obtenerProductos)
+
+producto.get("/:id", obtenerUnProducto)
 
 producto.post("/crear-producto", crearProducto)
 
