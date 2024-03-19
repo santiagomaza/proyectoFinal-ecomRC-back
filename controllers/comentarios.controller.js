@@ -10,12 +10,13 @@ const obtenerComentarios = async (req, res) => {
 }
 
 const crearComentario = async (req, res) => {
-  const { username, producto, mensaje } = req.body 
+  const { usuario, producto, fecha, mensaje } = req.body 
   
   try {
     const nuevoComentario = new Comentario ({
-      username,
+      usuario,
       producto,
+      fecha,
       mensaje
     })
 
@@ -45,11 +46,17 @@ const borrarComentario = async (req, res) => {
 }
 
 const modificarComentario = async (req, res) => {
-  const { id, mensaje } = req.body
+  const { id, mensaje, fecha } = req.body
 
   try {
     await Comentario.findByIdAndUpdate(id, {
-      mensaje
+      mensaje,
+      fecha
+    })
+
+    res.json({
+      message: "Comentario modificado correctamente",
+      status: 200
     })
   } catch (error) {
     console.error(error)
