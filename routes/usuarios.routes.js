@@ -2,7 +2,7 @@ const express = require("express")
 const usuario = express.Router()
 const { obtenerUsuarios, obtenerUnUsuario, crearUsuario, registrarUsuario, borrarUsuario, modificarUsuario, cambiarEstado, buscarEmailRecContraseña, restablecerContraseña, inicioSesion } = require('../controllers/usuarios.controller')
 const { body } = require('express-validator')
-const { jwtValidator } = require('../middlewares/jwt')
+const { jwtValidator, jwtValidator_FP } = require('../middlewares/jwt')
 
 usuario.get("/obtener-usuarios", obtenerUsuarios)
 
@@ -55,7 +55,7 @@ usuario.patch("/cambiar-estado", cambiarEstado)
 
 usuario.patch("/restablecer-contrasenia", 
   body("contraseña").exists().trim().escape().isAlphanumeric("es-ES", {ignore:''}).not().isEmpty().isLength({min: 8, max: 15}).matches("/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*._-])(?=.{8,})/").isStrongPassword({minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1 }).withMessage("Contraseña invalida"),
-restablecerContraseña)
+jwtValidator_FP, restablecerContraseña)
 
 usuario.delete("/eliminar-usuario", jwtValidator, borrarUsuario)
 

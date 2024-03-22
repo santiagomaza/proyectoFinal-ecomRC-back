@@ -254,7 +254,7 @@ const buscarEmailRecContraseña = async (req, res) => {
 
       res.json({
         message: `Email enviado correctamente al usuario ${usuario.username}`,
-        token,
+        token_RC,
         usuario,
         status: 200
       })
