@@ -2,7 +2,9 @@ const Usuario = require('../models/usuarios.model')
 const bcrypt = require("bcrypt")
 const { transporter } = require('../helpers/nodemailer.transporter')
 const jwt = require("jsonwebtoken")
-const claveToken = process.env.claveTOKEN
+const claveTokenInicioSesion = process.env.claveTOKEN_IS
+const claveTokenRecContraseña = process.env.claveTOKEN_RC
+const { validationResult } = require('express-validator')
 
 const obtenerUsuarios = async (req,res) => {
   try {
@@ -38,6 +40,12 @@ const crearUsuario = async (req,res) => {
   const usuarioBD = await Usuario.findOne({ username })
   const emailBD = await Usuario.findOne({ email })
   const saltRounds = 15
+
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() })
+  }
   
   if(usuarioBD){
     return res.json({
@@ -90,6 +98,12 @@ const registrarUsuario = async (req,res) => {
   const emailBD = await Usuario.findOne({ email })
   const saltRounds = 15
   const contraseñaEncriptada = bcrypt.hashSync(contraseña, saltRounds)
+
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() })
+  }
 
   if(usuarioBD){
     return res.status(400).json({
@@ -215,7 +229,7 @@ const cambiarEstado = async (req,res) => {
 const buscarEmailRecContraseña = async (req, res) => {
   const { email } = req.body
   const usuario = await Usuario.findOne({ email })
-  const token = jwt.sign({ usuario }, claveToken)
+  const token_RC = jwt.sign({ usuario }, claveTokenRecContraseña)
 
   if(usuario){
     try {
@@ -229,7 +243,7 @@ const buscarEmailRecContraseña = async (req, res) => {
           <br>
           <p>Solicitaste un cambio de contraseña para el email ${email}. Para poder hacer el cambio de contraseña, por favor, haz click en el siguiente enlace: </p>
           <br>
-          <a href="http://localhost:5173/restablecerContraseña/${token}">http://localhost:5173/restablecerContraseña/${token}</a>
+          <a href="http://localhost:5173/restablecerContraseña/${token_RC}">http://localhost:5173/restablecerContraseña/${token_RC}</a>
           <br>
           <br>
           <span>Saludos cordiales</span>
@@ -299,7 +313,7 @@ const inicioSesion = async (req, res) => {
       }
       else if(usuario.estado === "Activo" || usuario.estado === "Pendiente"){
         if(pwd){
-          const token = jwt.sign({ usuario }, claveToken)
+          const token = jwt.sign({ usuario }, claveTokenInicioSesion)
   
           return res.json({
             message: `¡Bienvenido ${usuario.username}!`,
