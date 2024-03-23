@@ -1,5 +1,6 @@
 const Producto = require('../models/productos.model')
 const Categoria = require('../models/categorias.model')
+const { validationResult } = require('express-validator')
 
 const obtenerProductos = async (req, res) => {
   try {
@@ -29,6 +30,12 @@ const crearProducto = async (req, res) => {
 
   const productoBD = await Producto.findOne({ nombre })
   const categoriaBD = await Categoria.findOne({ categoria })
+
+  const errors = validationResult(req)
+
+  if(!errors.isEmpty()){
+    return res.status(400).json({ errors: errors.array() })
+  }
   
   if(!categoriaBD){
     return res.json({
@@ -86,6 +93,12 @@ const eliminarProducto = async (req, res) => {
 const modificarProducto = async (req, res) => {
   const { id, nombre, precio, stock, categoria, descripcion, imagen1, imagen2, imagen3 } = req.body
   const categoriaBD = await Categoria.findOne({ categoria })
+
+  const errors = validationResult(req)
+
+  if(!errors.isEmpty()){
+    return res.status(400).json({ errors: errors.array() })
+  }
 
   if(!categoriaBD){
     return res.json({

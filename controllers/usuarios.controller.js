@@ -188,6 +188,12 @@ const borrarUsuario = async (req, res) => {
 const modificarUsuario = async (req, res) => {
   const { id, nombre, username, domicilio, email, pais, provincia, codigoPostal, telefono, estado, rol } = req.body
 
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() })
+  }
+
   try {
     await Usuario.findByIdAndUpdate(id, {
       nombre,
