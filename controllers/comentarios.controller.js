@@ -1,4 +1,5 @@
 const Comentario = require ('../models/comentarios.model')
+const { validationResult } = require('express-validator')
 
 const obtenerComentarios = async (req, res) => {
   try {
@@ -10,7 +11,13 @@ const obtenerComentarios = async (req, res) => {
 }
 
 const crearComentario = async (req, res) => {
-  const { usuario, producto, fecha, mensaje } = req.body 
+  const { usuario, producto, fecha, mensaje } = req.body
+  
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() })
+  }
   
   try {
     const nuevoComentario = new Comentario ({
@@ -47,6 +54,12 @@ const borrarComentario = async (req, res) => {
 
 const modificarComentario = async (req, res) => {
   const { id, mensaje, fecha } = req.body
+
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() })
+  }
 
   try {
     await Comentario.findByIdAndUpdate(id, {
