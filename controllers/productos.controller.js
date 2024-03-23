@@ -86,7 +86,6 @@ const eliminarProducto = async (req, res) => {
 const modificarProducto = async (req, res) => {
   const { id, nombre, precio, stock, categoria, descripcion, imagen1, imagen2, imagen3 } = req.body
   const categoriaBD = await Categoria.findOne({ categoria })
-  const productoBD = await Producto.findOne({ nombre })
 
   if(!categoriaBD){
     return res.json({
