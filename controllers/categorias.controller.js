@@ -1,4 +1,5 @@
 const Categoria = require('../models/categorias.model')
+const { validationResults } = require('express-validator')
 
 const obtenerCategorias = async (req, res) => {
   try {
@@ -13,6 +14,12 @@ const crearCategoria = async (req, res) => {
   const { categoria, descripcion, publicada } = req.body
 
   const categoriaBD = await Categoria.findOne({ categoria })
+
+  const errors = validationResults(req)
+
+  if(!errors.isEmpty()){
+    return res.status(400).json({ errors: errors.array() })
+  }
 
   if(categoriaBD){
     return res.json({
@@ -42,6 +49,12 @@ const crearCategoria = async (req, res) => {
 
 const modificarCategoria = async (req, res) => {
   const { id, categoria, descripcion } = req.body
+
+  const errors = validationResults(req)
+
+  if(!errors.isEmpty()){
+    return res.status(400).json({ errors: errors.array() })
+  }
 
   try {
     await Categoria.findByIdAndUpdate(id, { categoria, descripcion })
