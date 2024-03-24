@@ -13,7 +13,8 @@ const jwtValidator = async (req, res, next) => {
     }
   } catch (error) {
     res.json({
-      message: "No autorizado"
+      message: "No autorizado",
+      status: 500
     })
   }
 }
@@ -29,7 +30,8 @@ const jwtValidator_FP = async (req, res, next) => {
     }
   } catch (error) {
     res.json({
-      message: "Token invalido"
+      message: "Token invalido o inexistente",
+      status: 500
     })
   }
 }

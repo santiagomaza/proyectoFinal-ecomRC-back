@@ -7,13 +7,13 @@ const { body } = require('express-validator')
 categoria.get("/obtener-categorias", obtenerCategorias)
 
 categoria.post("/crear-categoria", 
-  body("categoria").exists().trim().escape().isAlpha("es-ES", { ignore: ' '}).not().isEmpty().isLength({ min: 5, max: 30}).withMessage("Categoría Invalida"),
-  body("descripcion").exists().trim().escape().isAlphanumeric("es-ES", { ignore: ' .,-_/#$%&/()?¡!'}).not().isEmpty().isLength({ min: 8, max: 200}).withMessage("Descripcion Invalida"),
-jwtValidator, crearCategoria)
+  body("categoria").exists().trim().escape().isAlpha("es-ES", { ignore: ' '}).not().isEmpty().isLength({ min: 5, max: 20}).withMessage("Categoría Invalida"),
+  body("descripcion").exists().trim().escape().isAlphanumeric("es-ES", { ignore: ' .,-_/#$%&/()?¡! '}).not().isEmpty().isLength({ min: 8, max: 200}).withMessage("Descripcion Invalida"), 
+crearCategoria)
 
 categoria.patch("/modificar-categoria",
-  body("categoria").exists().trim().escape().isAlpha("es-ES", { ignore: ' '}).not().isEmpty().isLength({ min: 5, max: 30}).withMessage("Categoría Invalida"),
-  body("descripcion").exists().trim().escape().isAlpha("es-ES", { ignore:' .,-_/#$%&/()?¡!'}).not().isEmpty().isLength({ min: 8, max: 200}).withMessage("Descripcion Invalida"),
+  body("categoria").exists().trim().escape().isAlpha("es-ES", { ignore: ' '}).not().isEmpty().isLength({ min: 5, max: 20}).withMessage("Categoría Invalida"),
+  body("descripcion").exists().trim().escape().isAlpha("es-ES", { ignore:' .,-_/#$%&/()?¡! '}).not().isEmpty().isLength({ min: 8, max: 200}).withMessage("Descripcion Invalida"),
 jwtValidator, modificarCategoria)
 
 categoria.patch("/publicar-categoria",jwtValidator, publicarCategoria)
