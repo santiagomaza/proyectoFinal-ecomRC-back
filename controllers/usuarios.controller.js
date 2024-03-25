@@ -149,7 +149,7 @@ const registrarUsuario = async (req,res) => {
           <p>🫂Muchas gracias por registrarte a nuestra página web🫂</p>
           <br>
           <p>Para completar el proceso de registro, necesitamos que verifiques el email que proporcionaste: <strong>${emailUsuario}</strong>. Para eso, haz click en el siguiente enlace: </p>
-          <a href="http://localhost:5173/verificar-email/${idUsuario}">http://localhost:5173/verificar-email/${idUsuario}</a>
+          <a href="https://ecom-rc-front.vercel.app/verificar-email/${idUsuario}">https://ecom-rc-front.vercel.app/verificar-email/${idUsuario}</a>
           <br>
           <br>
           <span>Saludos cordiales</span>
@@ -249,7 +249,7 @@ const buscarEmailRecContraseña = async (req, res) => {
           <br>
           <p>Solicitaste un cambio de contraseña para el email ${email}. Para poder hacer el cambio de contraseña, por favor, haz click en el siguiente enlace: </p>
           <br>
-          <a href="http://localhost:5173/restablecerContraseña/${token_RC}">http://localhost:5173/restablecerContraseña/${token_RC}</a>
+          <a href="https://ecom-rc-front.vercel.app/restablecerContraseña/${token_RC}">https://ecom-rc-front.vercel.app/restablecerContraseña/${token_RC}</a>
           <br>
           <br>
           <span>Saludos cordiales</span>
