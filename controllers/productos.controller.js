@@ -5,7 +5,12 @@ const { validationResult } = require('express-validator')
 const obtenerProductos = async (req, res) => {
   try {
     const producto = await Producto.find({})
-    res.json(producto)
+
+    res.json({
+      producto,
+      status: 200
+    })
+
   } catch (error) {
     console.error(error)
   }
