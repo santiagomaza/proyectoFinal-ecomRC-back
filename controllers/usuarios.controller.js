@@ -106,14 +106,16 @@ const registrarUsuario = async (req,res) => {
   }
 
   if(usuarioBD){
-    return res.status(400).json({
-      message: 'El usuario ya existe en la base de datos'
+    return res.json({
+      message: 'El usuario ya existe en la base de datos',
+      status: 400
     })
   }
 
   if(emailBD){
     return res.status(400).json({
-      message: 'El email ya existe en la base de datos'
+      message: 'El email ya existe en la base de datos',
+      status: 400
     })
   }
 
