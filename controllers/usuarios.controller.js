@@ -60,6 +60,13 @@ const crearUsuario = async (req,res) => {
       status: 400
     })
   }
+
+  if(usuarioBD && emailBD){
+    return res.json({
+      message: 'El nombre de usuario y el email ya existen en la base de datos',
+      status: 401
+    })
+  }
   
   if(!usuarioBD || !emailBD){
     const contraseñaEncriptada = bcrypt.hashSync(contraseña, saltRounds)
@@ -113,7 +120,7 @@ const registrarUsuario = async (req,res) => {
   }
 
   if(emailBD){
-    return res.status(400).json({
+    return res.json({
       message: 'El email ya existe en la base de datos',
       status: 400
     })
