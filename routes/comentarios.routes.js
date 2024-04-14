@@ -14,7 +14,7 @@ comentario.post('/crear-comentario',
 jwtValidator, crearComentario)
 
 comentario.patch('/modificar-comentario', 
-  body("mensaje").exists().escape().trim().isAlphanumeric("es-ES", { ignore:' !"#%&//()=?¡,;.:_-<>+*¿°|¬<@' }).not().isEmpty().withMessage("Comentario invalido"),
+  body("mensaje").exists().escape().trim().isAlphanumeric("es-ES", { ignore:' !"#%&//()=?¡,;.:_-<>+*¿°|¬<@ ' }).not().isEmpty().withMessage("Comentario invalido"),
   body("fecha").exists().trim().not().isEmpty().withMessage("Fecha invalida"),
 jwtValidator, modificarComentario)
 
