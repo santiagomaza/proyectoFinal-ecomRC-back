@@ -334,7 +334,7 @@ const inicioSesion = async (req, res) => {
       }
       else if(usuario.estado === "Activo" || usuario.estado === "Pendiente"){
         if(pwd){
-          const token = jwt.sign({ usuario }, claveTokenInicioSesion, { expiresIn: '2m' })
+          const token = jwt.sign({ usuario }, claveTokenInicioSesion, { expiresIn: '10m' })
   
           return res.json({
             message: `¡Bienvenido ${usuario.username}!`,
