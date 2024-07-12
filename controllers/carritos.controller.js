@@ -1,21 +1,39 @@
 const Carrito = require('../models/carritos.model')
 
 const obtenerCarrito = async (req, res) => {
+  let total = 0
+  
   try {
     const carrito = await Carrito.find({})
-    res.json(carrito)
+
+    carrito.forEach((carro) => {
+      total += carro.subtotal
+    })
+
+    res.json({
+      carrito,
+      total
+    })
+
   } catch (error) {
     console.error(error)
   }
 }
 
 const crearCarrito = async (req, res) => {
-  const { producto, usuario } = req.body
+  const { producto, usuario, cantidad, idUsuario, idProducto } = req.body
+  let subtotal = 0
+
+  subtotal = cantidad * producto.precio
 
   try {
     const nuevoCarrito = new Carrito({
+      idUsuario,
+      idProducto,
       producto,
-      usuario
+      usuario,
+      subtotal,
+      cantidad: 1
     })
 
     await nuevoCarrito.save()
@@ -44,4 +62,20 @@ const borrarCarrito = async (req, res) => {
   }
 }
 
-module.exports = { obtenerCarrito, crearCarrito, borrarCarrito }
+const actualizarCarritoCant = async (req,res) => {
+  const { id, cantidad, precio } = req.body
+
+  let subtotal = cantidad * precio
+
+  try {
+    await Carrito.findByIdAndUpdate(id, {
+      cantidad, 
+      subtotal
+    })
+
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+module.exports = { obtenerCarrito, crearCarrito, borrarCarrito, actualizarCarritoCant }
